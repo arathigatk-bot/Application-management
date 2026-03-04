@@ -15,6 +15,30 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+    // Production-only: Disable right-click, DevTools shortcuts, text selection
+    if (location.hostname !== 'localhost') {
+      // Disable right-click
+      document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+      // Block DevTools shortcuts
+      document.addEventListener('keydown', function (e) {
+        // F12
+        if (e.key === 'F12') { e.preventDefault(); return false; }
+        // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+        if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) { e.preventDefault(); return false; }
+        // Ctrl+U (View Source)
+        if (e.ctrlKey && e.key.toUpperCase() === 'U') { e.preventDefault(); return false; }
+      });
+
+      // Disable text selection (prevents copying page content)
+      document.addEventListener('selectstart', function (e) {
+        // Allow selection inside input/textarea
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+        e.preventDefault();
+      });
+    }
+  </script>
 </body>
 
 </html>
