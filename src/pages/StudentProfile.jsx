@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import {
     getStudent,
+    addStudent,
     updateStudent,
     deleteStudent,
     firebaseInitialized,
@@ -164,6 +165,7 @@ export default function StudentProfile() {
     const location = useLocation();
     const [activeTab, setActiveTab] = useState(location.state?.initialTab || 'personal');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const isNew = id === 'new';
     const debounceRef = useRef(null);
 
     // State for confirmation modals
@@ -195,14 +197,16 @@ export default function StudentProfile() {
         const currentLog = student.activityLog || [];
         const updatedLog = [...currentLog, logEntry];
         setStudent(prev => ({ ...prev, activityLog: updatedLog }));
-        if (firebaseInitialized) {
+
+        const realId = await ensureStudentExists();
+        if (realId && firebaseInitialized) {
             try {
-                await updateStudent(id, { activityLog: updatedLog });
+                await updateStudent(realId, { activityLog: updatedLog });
             } catch (err) {
                 console.error('Failed to save activity log:', err);
             }
         }
-    }, [id, student]);
+    }, [id, student, firebaseInitialized]);
 
     // Handle status change with confirmation
     const handleStatusChangeRequest = useCallback((newStatus) => {
@@ -338,6 +342,12 @@ export default function StudentProfile() {
     useEffect(() => {
         async function load() {
             try {
+                if (isNew) {
+                    setStudent({ id: 'new', ...defaultStudentData });
+                    setLoading(false);
+                    return;
+                }
+
                 if (firebaseInitialized) {
                     const data = await getStudent(id);
                     setStudent(data || { id, ...defaultStudentData });
@@ -352,45 +362,98 @@ export default function StudentProfile() {
             }
         }
         load();
-    }, [id]);
+    }, [id, isNew, firebaseInitialized]);
+
+    // Internal helper to ensure the student exists in Firebase before updating
+    // Returns the real ID (either existing or newly created)
+    async function ensureStudentExists() {
+        if (id !== 'new') return id;
+        if (!student || !student.firstName.trim()) return null;
+
+        try {
+            setSaving(true);
+            const initialLog = [{
+                action: 'profile_created',
+                label: 'Student profile created',
+                timestamp: new Date().toISOString(),
+            }];
+            const newId = await addStudent({ ...student, activityLog: initialLog });
+            // Update URL without refreshing
+            window.history.replaceState(null, '', `#/students/${newId}`);
+            // We can't easily change the 'id' from useParams without a navigation,
+            // but for the current session we just return the newId.
+            // Actually, better to navigate to trigger a clean reload with the new ID
+            navigate(`/students/${newId}`, { replace: true, state: location.state });
+            return newId;
+        } catch (err) {
+            console.error('Failed to create student:', err);
+            return null;
+        } finally {
+            setSaving(false);
+        }
+    }
 
     // Auto-save on blur with activity logging
     const handleBlurSave = useCallback(
         async (field, value) => {
-            if (!firebaseInitialized || !student) return;
+            if (!student) return;
             const oldValue = student[field];
+
+            // If field is first name and it's being cleared on a new student, don't save
+            if (id === 'new' && field === 'firstName' && !value.trim()) return;
+
+            const realId = await ensureStudentExists();
+            if (!realId || !firebaseInitialized) return;
+
             // Only log if value actually changed
             if (oldValue !== value && (oldValue || value)) {
-                addActivityLog({
+                // We handle the log inside a separate call to avoid recursion or state issues
+                // but since we are about to update, let's just do it manually here if it's a real student
+                const logEntry = {
                     action: 'field_edited',
                     label: `Updated "${field}"`,
                     field: field,
                     oldValue: oldValue || '(empty)',
                     newValue: value || '(empty)',
-                });
-            }
-            try {
-                setSaving(true);
-                await updateStudent(id, { [field]: value });
-            } catch (err) {
-                console.error('Auto-save failed:', err);
-            } finally {
-                setSaving(false);
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    setSaving(true);
+                    await updateStudent(realId, {
+                        [field]: value,
+                        activityLog: [...(student.activityLog || []), logEntry]
+                    });
+                } catch (err) {
+                    console.error('Auto-save failed:', err);
+                } finally {
+                    setSaving(false);
+                }
+            } else {
+                try {
+                    setSaving(true);
+                    await updateStudent(realId, { [field]: value });
+                } catch (err) {
+                    console.error('Auto-save failed:', err);
+                } finally {
+                    setSaving(false);
+                }
             }
         },
-        [id, student, addActivityLog]
+        [id, student, firebaseInitialized, ensureStudentExists]
     );
 
     // Debounced save for notes
     const handleNotesChange = useCallback(
-        (value) => {
+        async (value) => {
             setStudent((prev) => ({ ...prev, notes: value }));
             clearTimeout(debounceRef.current);
             debounceRef.current = setTimeout(async () => {
-                if (!firebaseInitialized) return;
+                const realId = await ensureStudentExists();
+                if (!realId || !firebaseInitialized) return;
                 try {
                     setSaving(true);
-                    await updateStudent(id, { notes: value });
+                    await updateStudent(realId, { notes: value });
                 } catch (err) {
                     console.error('Auto-save notes failed:', err);
                 } finally {
@@ -398,7 +461,7 @@ export default function StudentProfile() {
                 }
             }, 500);
         },
-        [id]
+        [id, student, firebaseInitialized, ensureStudentExists]
     );
 
     // Print/Export handler — generates a 6+ page PDF-ready document

@@ -217,18 +217,7 @@ export default function Dashboard() {
     }
 
     async function handleAddStudent() {
-        try {
-            const initialLog = [{
-                action: 'profile_created',
-                label: 'Student profile created',
-                timestamp: new Date().toISOString(),
-            }];
-            const id = await addStudent({ activityLog: initialLog });
-            navigate(`/students/${id}`);
-        } catch (err) {
-            console.error('Failed to add student:', err);
-            alert('Failed to add student: ' + err.message);
-        }
+        navigate(`/students/new`);
     }
 
     const handleDeleteStudent = useCallback(async (id) => {
