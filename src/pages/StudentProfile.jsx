@@ -1248,7 +1248,7 @@ function AcademicTab({ student, onChange, onBlurSave }) {
                 {undergradDegrees.map((ug, index) => (
                     <div key={index} className="mt-4 pt-4 border-t border-dashed border-neutral-200 animate-slideDown">
                         <div className="flex justify-between items-center mb-3">
-                            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Undergraduate Degree #{index + 1}</span>
+                            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Undergraduate Degree #{index + 2}</span>
                             <button
                                 type="button"
                                 onClick={() => removeUndergradDegree(index)}
@@ -1317,7 +1317,7 @@ function AcademicTab({ student, onChange, onBlurSave }) {
                 {postgradDegrees.map((pg, index) => (
                     <div key={index} className="mt-4 pt-4 border-t border-dashed border-neutral-200 animate-slideDown">
                         <div className="flex justify-between items-center mb-3">
-                            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Master's Degree #{index + 1}</span>
+                            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Master's Degree #{index + 2}</span>
                             <button
                                 type="button"
                                 onClick={() => removePostgradDegree(index)}
@@ -1378,7 +1378,7 @@ function AcademicTab({ student, onChange, onBlurSave }) {
                     {customAcademicSections.map((section, index) => (
                         <div key={section.id} className="pt-4 border-t border-dashed border-neutral-200 animate-slideDown first:border-t-0 first:pt-0">
                             <div className="flex justify-between items-center mb-3">
-                                <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Information #{index + 1}</span>
+                                <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Information #{index + 2}</span>
                                 <button
                                     type="button"
                                     onClick={() => removeCustomSection(index)}
