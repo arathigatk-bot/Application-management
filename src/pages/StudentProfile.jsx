@@ -1221,48 +1221,52 @@ function AcademicTab({ student, onChange, onBlurSave }) {
 
             {/* Undergraduate Section */}
             <div className="mt-6 pt-6 border-t border-neutral-100">
-                <h4 className="text-md font-semibold text-neutral-700 mb-4 flex items-center gap-2">
-                    <GraduationCap size={18} className="text-primary-600" />
-                    Undergraduate
+                <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-md font-semibold text-neutral-700 flex items-center gap-2">
+                        <GraduationCap size={18} className="text-primary-600" />
+                        Undergraduate
+                    </h4>
                     <button
                         type="button"
                         onClick={addUndergradDegree}
-                        className="ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-100 text-primary-600 hover:bg-primary-200 transition-colors"
-                        title="Add undergraduate degree"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-50 text-primary-600 hover:bg-primary-100 text-xs font-medium transition-colors"
                     >
                         <Plus size={14} />
+                        Add Degree
                     </button>
-                </h4>
+                </div>
+
                 {/* Primary Undergraduate Fields */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                     <Field label="Course" value={student.undergradCourse} onChange={(v) => onChange('undergradCourse', v)} onBlur={() => onBlurSave('undergradCourse', student.undergradCourse)} placeholder="e.g., B.Tech Computer Science" />
+                    <Field label="University" value={student.undergradUniversity} onChange={(v) => onChange('undergradUniversity', v)} onBlur={() => onBlurSave('undergradUniversity', student.undergradUniversity)} placeholder="e.g., University of Delhi" />
                     <Field label="Year of Completion" value={student.undergradYear} onChange={(v) => onChange('undergradYear', v)} onBlur={() => onBlurSave('undergradYear', student.undergradYear)} placeholder="e.g., 2024" />
                     <Field label="CGPA" value={student.undergradCgpa} onChange={(v) => onChange('undergradCgpa', v)} onBlur={() => onBlurSave('undergradCgpa', student.undergradCgpa)} placeholder="e.g., 8.5" />
-                    <Field label="University" value={student.undergradUniversity} onChange={(v) => onChange('undergradUniversity', v)} onBlur={() => onBlurSave('undergradUniversity', student.undergradUniversity)} placeholder="e.g., University of Delhi" />
                 </div>
+
                 {/* Additional Undergraduate Degrees */}
                 {undergradDegrees.map((ug, index) => (
-                    <div key={index} className="mt-4 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+                    <div key={index} className="mt-4 pt-4 border-t border-dashed border-neutral-200 animate-slideDown">
                         <div className="flex justify-between items-center mb-3">
-                            <span className="text-sm font-medium text-neutral-600">Additional Undergraduate Degree #{index + 1}</span>
+                            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Undergraduate Degree #{index + 1}</span>
                             <button
                                 type="button"
                                 onClick={() => removeUndergradDegree(index)}
-                                className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-danger/10 text-danger hover:bg-danger/20 transition-colors"
-                                title="Remove degree"
+                                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-danger hover:bg-danger/10 text-xs font-medium transition-colors"
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={12} />
+                                Remove
                             </button>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <Field
-                                label="Degree"
+                                label="Course"
                                 value={ug.degree}
                                 onChange={(v) => updateUndergradDegree(index, 'degree', v)}
                                 placeholder="e.g., B.Sc. Physics"
                             />
                             <Field
-                                label="Institution"
+                                label="University"
                                 value={ug.institution}
                                 onChange={(v) => updateUndergradDegree(index, 'institution', v)}
                                 placeholder="e.g., University of Mumbai"
@@ -1273,6 +1277,12 @@ function AcademicTab({ student, onChange, onBlurSave }) {
                                 onChange={(v) => updateUndergradDegree(index, 'year', v)}
                                 placeholder="e.g., 2022"
                             />
+                            <Field
+                                label="CGPA/Score"
+                                value={ug.score || ''}
+                                onChange={(v) => updateUndergradDegree(index, 'score', v)}
+                                placeholder="e.g., 9.0"
+                            />
                         </div>
                     </div>
                 ))}
@@ -1280,48 +1290,52 @@ function AcademicTab({ student, onChange, onBlurSave }) {
 
             {/* Postgraduate Section */}
             <div className="mt-6 pt-6 border-t border-neutral-100">
-                <h4 className="text-md font-semibold text-neutral-700 mb-4 flex items-center gap-2">
-                    <GraduationCap size={18} className="text-primary-600" />
-                    Previous Masters (if any)
+                <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-md font-semibold text-neutral-700 flex items-center gap-2">
+                        <GraduationCap size={18} className="text-primary-600" />
+                        Previous Masters (if any)
+                    </h4>
                     <button
                         type="button"
                         onClick={addPostgradDegree}
-                        className="ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-100 text-primary-600 hover:bg-primary-200 transition-colors"
-                        title="Add master's degree"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-50 text-primary-600 hover:bg-primary-100 text-xs font-medium transition-colors"
                     >
                         <Plus size={14} />
+                        Add Masters
                     </button>
-                </h4>
+                </div>
+
                 {/* Primary Postgraduate Fields */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                     <Field label="Course" value={student.postgradCourse} onChange={(v) => onChange('postgradCourse', v)} onBlur={() => onBlurSave('postgradCourse', student.postgradCourse)} placeholder="e.g., M.Sc. Data Science" />
+                    <Field label="University" value={student.postgradUniversity} onChange={(v) => onChange('postgradUniversity', v)} onBlur={() => onBlurSave('postgradUniversity', student.postgradUniversity)} placeholder="e.g., TU Munich" />
                     <Field label="Year of Completion" value={student.postgradYear} onChange={(v) => onChange('postgradYear', v)} onBlur={() => onBlurSave('postgradYear', student.postgradYear)} placeholder="e.g., 2026" />
                     <Field label="CGPA" value={student.postgradCgpa} onChange={(v) => onChange('postgradCgpa', v)} onBlur={() => onBlurSave('postgradCgpa', student.postgradCgpa)} placeholder="e.g., 8.0" />
-                    <Field label="University" value={student.postgradUniversity} onChange={(v) => onChange('postgradUniversity', v)} onBlur={() => onBlurSave('postgradUniversity', student.postgradUniversity)} placeholder="e.g., TU Munich" />
                 </div>
+
                 {/* Additional Postgraduate Degrees */}
                 {postgradDegrees.map((pg, index) => (
-                    <div key={index} className="mt-4 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+                    <div key={index} className="mt-4 pt-4 border-t border-dashed border-neutral-200 animate-slideDown">
                         <div className="flex justify-between items-center mb-3">
-                            <span className="text-sm font-medium text-neutral-600">Additional Master's Degree #{index + 1}</span>
+                            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Master's Degree #{index + 1}</span>
                             <button
                                 type="button"
                                 onClick={() => removePostgradDegree(index)}
-                                className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-danger/10 text-danger hover:bg-danger/20 transition-colors"
-                                title="Remove degree"
+                                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-danger hover:bg-danger/10 text-xs font-medium transition-colors"
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={12} />
+                                Remove
                             </button>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <Field
-                                label="Degree"
+                                label="Course"
                                 value={pg.degree}
                                 onChange={(v) => updatePostgradDegree(index, 'degree', v)}
                                 placeholder="e.g., M.Tech Computer Science"
                             />
                             <Field
-                                label="Institution"
+                                label="University"
                                 value={pg.institution}
                                 onChange={(v) => updatePostgradDegree(index, 'institution', v)}
                                 placeholder="e.g., IIT Delhi"
@@ -1331,6 +1345,12 @@ function AcademicTab({ student, onChange, onBlurSave }) {
                                 value={pg.year}
                                 onChange={(v) => updatePostgradDegree(index, 'year', v)}
                                 placeholder="e.g., 2024"
+                            />
+                            <Field
+                                label="CGPA/Score"
+                                value={pg.score || ''}
+                                onChange={(v) => updatePostgradDegree(index, 'score', v)}
+                                placeholder="e.g., 8.5"
                             />
                         </div>
                     </div>
@@ -1347,47 +1367,59 @@ function AcademicTab({ student, onChange, onBlurSave }) {
                     <button
                         type="button"
                         onClick={addCustomSection}
-                        className="ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-100 text-primary-600 hover:bg-primary-200 transition-colors"
-                        title="Add section"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-50 text-primary-600 hover:bg-primary-100 text-xs font-medium transition-colors"
                     >
                         <Plus size={14} />
+                        Add Section
                     </button>
                 </div>
-                {customAcademicSections.map((section, index) => (
-                    <div key={section.id} className="mt-4 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-                        <div className="flex justify-between items-center mb-3 gap-2">
-                            <input
-                                type="text"
-                                value={section.title}
-                                onChange={(e) => updateCustomSection(index, 'title', e.target.value)}
-                                placeholder="Section Title (e.g., PhD, Certificate Course)"
-                                className="input-field flex-1"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => removeCustomSection(index)}
-                                className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-danger/10 text-danger hover:bg-danger/20 transition-colors ml-2"
-                                title="Remove section"
-                            >
-                                <Trash2 size={14} />
-                            </button>
+
+                <div className="space-y-6">
+                    {customAcademicSections.map((section, index) => (
+                        <div key={section.id} className="pt-4 border-t border-dashed border-neutral-200 animate-slideDown first:border-t-0 first:pt-0">
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Additional Information #{index + 1}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => removeCustomSection(index)}
+                                    className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-danger hover:bg-danger/10 text-xs font-medium transition-colors"
+                                >
+                                    <Trash2 size={12} />
+                                    Remove
+                                </button>
+                            </div>
+                            <div className="grid grid-cols-1 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="block text-xs font-medium text-neutral-500">Section Title</label>
+                                        <input
+                                            type="text"
+                                            value={section.title}
+                                            onChange={(e) => updateCustomSection(index, 'title', e.target.value)}
+                                            placeholder="e.g., PhD, Certificate Course, Internship"
+                                            className="input-field"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="block text-xs font-medium text-neutral-500">Details</label>
+                                    <textarea
+                                        value={section.details}
+                                        onChange={(e) => updateCustomSection(index, 'details', e.target.value)}
+                                        placeholder="Enter additional details and descriptions..."
+                                        rows={3}
+                                        className="input-field resize-y min-h-[80px]"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-xs font-medium text-neutral-500 mb-1.5">
-                                Details
-                            </label>
-                            <textarea
-                                value={section.details}
-                                onChange={(e) => updateCustomSection(index, 'details', e.target.value)}
-                                placeholder="Enter additional details..."
-                                rows={3}
-                                className="input-field resize-y"
-                            />
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+
                 {customAcademicSections.length === 0 && (
-                    <p className="text-sm text-neutral-400 italic">Click the + button to add custom academic information</p>
+                    <div className="text-center py-6 bg-neutral-50 rounded-xl border border-dashed border-neutral-200">
+                        <p className="text-sm text-neutral-400">Click the "+ Add Section" button to include more academic history</p>
+                    </div>
                 )}
             </div>
 
