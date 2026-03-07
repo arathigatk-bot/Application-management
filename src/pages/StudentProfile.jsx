@@ -42,6 +42,7 @@ import {
     DOCUMENT_SLOTS,
 } from '../lib/firebase';
 import DocumentVault from '../components/DocumentVault';
+import CustomSelect from '../components/CustomSelect';
 import DocumentPreview from '../components/DocumentPreview';
 import ConfirmModal from '../components/ConfirmModal';
 import StatusBadge from '../components/StatusBadge';
@@ -1092,17 +1093,12 @@ function PersonalTab({ student, onChange, onBlurSave }) {
                 <Field label="Date of Birth" type="date" value={student.dateOfBirth} onChange={(v) => onChange('dateOfBirth', v)} onBlur={() => onBlurSave('dateOfBirth', student.dateOfBirth)} />
                 <div className="flex flex-col gap-1.5">
                     <label className="block text-xs font-medium text-neutral-500">Purpose</label>
-                    <select
+                    <CustomSelect
                         value={student.purpose || ''}
-                        onChange={(e) => onChange('purpose', e.target.value)}
-                        onBlur={() => onBlurSave('purpose', student.purpose)}
-                        className="input-field"
-                    >
-                        <option value="">Select Purpose</option>
-                        {PURPOSE_OPTIONS.map(opt => (
-                            <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                    </select>
+                        onChange={(v) => onChange('purpose', v)}
+                        options={PURPOSE_OPTIONS.map(opt => ({ value: opt, label: opt }))}
+                        placeholder="Select Purpose"
+                    />
                 </div>
                 {student.purpose === 'Other' && (
                     <Field

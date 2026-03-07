@@ -1,57 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, Filter, X, ChevronDown } from 'lucide-react';
+import { Search, Filter, X } from 'lucide-react';
 import { getAgents } from '../lib/firebase';
+import CustomSelect from './CustomSelect';
 
-// Custom dropdown component
-function CustomSelect({ value, onChange, options, placeholder, label }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const ref = useRef(null);
-
-    useEffect(() => {
-        function handleClickOutside(e) {
-            if (ref.current && !ref.current.contains(e.target)) {
-                setIsOpen(false);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const selectedOption = options.find(opt => opt.value === value);
-
-    return (
-        <div ref={ref} className="relative">
-            <button
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                className={`input-field flex items-center justify-between gap-2 min-w-[140px] h-8 text-xs py-1.5 px-3 ${value ? 'text-neutral-800' : 'text-neutral-400'}`}
-            >
-                <span className="truncate">{selectedOption ? selectedOption.label : placeholder}</span>
-                <ChevronDown size={14} className={`text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {isOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full min-w-[160px] bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50 animate-scaleIn">
-                    <button
-                        onClick={() => { onChange(''); setIsOpen(false); }}
-                        className={`w-full text-left px-3 py-2 text-xs hover:bg-neutral-50 ${!value ? 'text-primary-600 font-medium' : 'text-neutral-600'}`}
-                    >
-                        {placeholder}
-                    </button>
-                    {options.map((opt) => (
-                        <button
-                            key={opt.value}
-                            onClick={() => { onChange(opt.value); setIsOpen(false); }}
-                            className={`w-full text-left px-3 py-2 text-xs hover:bg-neutral-50 ${value === opt.value ? 'text-primary-600 font-medium bg-primary-50' : 'text-neutral-600'}`}
-                        >
-                            {opt.label}
-                        </button>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-}
 
 // Filter chip component
 function FilterChip({ label, value, onRemove }) {
