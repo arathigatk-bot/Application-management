@@ -213,10 +213,7 @@ export const DOCUMENT_SLOTS = [
     { key: 'cert12', label: '12th Certificate' },
     { key: 'degree', label: 'Degree Certificate' },
     { key: 'pg', label: 'PG Certificate' },
-    { key: 'otherCerts', label: 'Other Certificates' },
-    { key: 'workExp1', label: 'Work Experience 1' },
-    { key: 'workExp2', label: 'Work Experience 2' },
-    { key: 'workExp3', label: 'Work Experience 3' },
+    { key: 'workExp1', label: 'Work Experience' },
 ];
 
 // ============================================
